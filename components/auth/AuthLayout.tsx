@@ -21,7 +21,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="absolute top-8 left-8 flex items-center gap-2"
+          className="absolute top-8 left-8"
         >
           <Link href="/" className="flex items-center gap-2">
             <span className="text-white font-semibold text-xl">NIBBS NG</span>
@@ -57,9 +57,12 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col min-h-screen">
         <div className="lg:hidden p-6">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-gray-900 font-semibold text-lg">
-              Nibbs NG
-            </span>
+            <Image
+              src="/nibbs-logo.png"
+              alt="NIBBS Logo"
+              width={100}
+              height={100}
+            />
           </Link>
         </div>
         <div className="flex-1 flex items-center justify-center px-6 lg:px-16 pb-12">
