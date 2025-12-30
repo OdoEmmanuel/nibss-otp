@@ -24,7 +24,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           className="absolute top-8 left-8"
         >
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-white font-semibold text-xl">NIBBS NG</span>
+            <span className="text-white font-bold text-xl">NIBBS NG</span>
           </Link>
         </motion.div>
 

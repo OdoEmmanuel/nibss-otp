@@ -1,128 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Wallet,
   TrendingUp,
   TrendingDown,
   Search,
   Download,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TransactionTable, Transaction } from "./TransactionTable";
 import { TransactionPagination } from "./TransactionPagination";
+import { getTransactions, TransactionLog } from "@/lib/api/transactions";
 
-// dummy data
-const mockTransactions: Transaction[] = [
-  {
-    id: "1",
-    amount: 1500000,
-    type: "credit",
-    description: "Salary payment - January 2024",
-    date: new Date("2024-12-20T09:15:00"),
-    status: "completed",
-    reference: "TXN-2024-001234",
-  },
-  {
-    id: "2",
-    amount: 500000,
-    type: "debit",
-    description: "Bank transfer to Jane Smith",
-    date: new Date("2024-12-19T14:32:00"),
-    status: "completed",
-    reference: "TXN-2024-001233",
-  },
-  {
-    id: "3",
-    amount: 250000,
-    type: "credit",
-    description: "Payment received from ABC Company",
-    date: new Date("2024-12-18T11:45:00"),
-    status: "completed",
-    reference: "TXN-2024-001232",
-  },
-  {
-    id: "4",
-    amount: 75000,
-    type: "debit",
-    description: "Utility bill payment - December",
-    date: new Date("2024-12-17T16:20:00"),
-    status: "pending",
-    reference: "TXN-2024-001231",
-  },
-  {
-    id: "5",
-    amount: 1200000,
-    type: "credit",
-    description: "Refund from merchant - Order #12345",
-    date: new Date("2024-12-16T10:30:00"),
-    status: "completed",
-    reference: "TXN-2024-001230",
-  },
-  {
-    id: "6",
-    amount: 35000,
-    type: "debit",
-    description: "ATM withdrawal - Branch XYZ",
-    date: new Date("2024-12-15T08:15:00"),
-    status: "completed",
-    reference: "TXN-2024-001229",
-  },
-  {
-    id: "7",
-    amount: 2000000,
-    type: "credit",
-    description: "Investment return payment",
-    date: new Date("2024-12-14T13:50:00"),
-    status: "completed",
-    reference: "TXN-2024-001228",
-  },
-  {
-    id: "8",
-    amount: 150000,
-    type: "debit",
-    description: "Subscription renewal - Premium Plan",
-    date: new Date("2024-12-13T12:00:00"),
-    status: "completed",
-    reference: "TXN-2024-001227",
-  },
-  {
-    id: "9",
-    amount: 850000,
-    type: "credit",
-    description: "Freelance payment - Project Alpha",
-    date: new Date("2024-12-12T15:25:00"),
-    status: "pending",
-    reference: "TXN-2024-001226",
-  },
-  {
-    id: "10",
-    amount: 45000,
-    type: "debit",
-    description: "Mobile airtime purchase",
-    date: new Date("2024-12-11T07:40:00"),
-    status: "completed",
-    reference: "TXN-2024-001225",
-  },
-  {
-    id: "11",
-    amount: 320000,
-    type: "debit",
-    description: "Online purchase - E-commerce Store",
-    date: new Date("2024-12-10T18:55:00"),
-    status: "completed",
-    reference: "TXN-2024-001224",
-  },
-  {
-    id: "12",
-    amount: 1800000,
-    type: "credit",
-    description: "Loan disbursement",
-    date: new Date("2024-12-09T09:30:00"),
-    status: "completed",
-    reference: "TXN-2024-001223",
-  },
-];
+const ITEMS_PER_PAGE = 10;
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-NG", {
@@ -131,34 +23,87 @@ function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+function transformTransactionLog(
+  log: TransactionLog,
+  index: number
+): Transaction {
+  return {
+    id: `${index + 1}`,
+    amount: log.amount,
+    type: "debit" as const,
+    description: log.narration,
+    date: new Date(log.createdAt),
+    status: "completed" as const,
+    reference: log.narration.split("-").pop() || `REF-${index + 1}`,
+  };
+}
+
 export function TransactionsList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // search filter
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getTransactions();
+
+      if (response.status && response.data) {
+        const transformedTransactions = response.data.map(
+          transformTransactionLog
+        );
+        setTransactions(transformedTransactions);
+      }
+    } catch (err) {
+      console.error("Failed to fetch transactions:", err);
+      setError("Failed to load transactions. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
+
   const filteredTransactions = useMemo(() => {
-    return mockTransactions.filter((t) => {
-      return (
-        t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        t.reference.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-  }, [searchQuery]);
+    if (!searchQuery) return transactions;
 
-  // Pagination logic
-  const totalItems = filteredTransactions.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTransactions = filteredTransactions.slice(startIndex, endIndex);
+    const query = searchQuery.toLowerCase();
+    return transactions.filter(
+      (t) =>
+        t.description.toLowerCase().includes(query) ||
+        t.reference.toLowerCase().includes(query)
+    );
+  }, [searchQuery, transactions]);
 
-  // calculate stats from ALL transactions (not filtered) all from the dummy data just for ui
+  const paginationData = useMemo(() => {
+    const totalItems = filteredTransactions.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentTransactions = filteredTransactions.slice(
+      startIndex,
+      endIndex
+    );
+
+    return {
+      totalItems,
+      totalPages,
+      startIndex,
+      endIndex,
+      currentTransactions,
+    };
+  }, [filteredTransactions, currentPage]);
+
   const stats = useMemo(() => {
-    const income = mockTransactions
+    const income = transactions
       .filter((t) => t.type === "credit")
       .reduce((acc, curr) => acc + curr.amount, 0);
-    const expenses = mockTransactions
+    const expenses = transactions
       .filter((t) => t.type === "debit")
       .reduce((acc, curr) => acc + curr.amount, 0);
     return {
@@ -166,16 +111,53 @@ export function TransactionsList() {
       expenses,
       balance: income - expenses,
     };
+  }, [transactions]);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
   }, []);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+      setCurrentPage(1);
+    },
+    []
+  );
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1);
-  };
+  const handleRetry = useCallback(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-100">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="size-8 animate-spin text-[#386b0b]" />
+          <p className="text-muted-foreground">Loading transactions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-100">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-6 max-w-md">
+          <h3 className="text-lg font-semibold text-red-800 mb-2">
+            Error Loading Transactions
+          </h3>
+          <p className="text-sm text-red-600">{error}</p>
+          <Button
+            onClick={handleRetry}
+            className="mt-4 bg-[#386b0b] hover:bg-[#386b0b]/80"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -265,17 +247,17 @@ export function TransactionsList() {
 
       <div className="space-y-4">
         <div className="rounded-md border shadow-sm overflow-hidden">
-          <TransactionTable transactions={currentTransactions} />
+          <TransactionTable transactions={paginationData.currentTransactions} />
         </div>
 
-        {totalItems > 0 && (
+        {paginationData.totalItems > 0 && (
           <TransactionPagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={paginationData.totalPages}
             onPageChange={handlePageChange}
-            totalItems={totalItems}
-            startIndex={startIndex}
-            endIndex={endIndex}
+            totalItems={paginationData.totalItems}
+            startIndex={paginationData.startIndex}
+            endIndex={paginationData.endIndex}
           />
         )}
       </div>

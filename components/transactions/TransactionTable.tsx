@@ -12,10 +12,10 @@ import { cn } from "@/lib/utils";
 export interface Transaction {
   id: string;
   amount: number;
-  type: string;
+  type: "debit" | "credit";
   description: string;
   date: Date;
-  status: string;
+  status: "completed" | "pending";
   reference: string;
 }
 
