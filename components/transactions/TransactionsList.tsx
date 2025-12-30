@@ -171,7 +171,7 @@ export function TransactionsList() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Button
             variant="default"
             size="sm"
@@ -180,7 +180,7 @@ export function TransactionsList() {
             <Download className="size-4" />
             Export
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
