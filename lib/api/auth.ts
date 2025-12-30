@@ -28,7 +28,7 @@ export interface LoginResponse {
 /**
  * Login API call
  * TODO: Update this function to call your actual login endpoint
- * 
+ *
  * Example API call:
  * ```typescript
  * const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -38,18 +38,16 @@ export interface LoginResponse {
  *   },
  *   body: JSON.stringify(credentials),
  * });
- * 
+ *
  * if (!response.ok) {
  *   const error = await response.json();
  *   throw new Error(error.message || "Login failed");
  * }
- * 
+ *
  * return await response.json() as LoginResponse;
  * ```
  */
-export async function login(
-  credentials: LoginInput
-): Promise<LoginResponse> {
+export async function login(credentials: LoginInput): Promise<LoginResponse> {
   // TODO: Replace this with your actual API call
   // See example above
 
