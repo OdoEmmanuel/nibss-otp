@@ -178,7 +178,7 @@ export function TransactionsList() {
             onClick={() => router.push("/transfer")}
             variant="default"
             size="sm"
-            className="gap-2 bg-[#386b0b] hover:bg-[#386b0b]/80 text-white py-5 w-40"
+            className="gap-2 bg-[#386b0b] hover:bg-[#386b0b]/80 text-white py-5 w-40 cursor-pointer"
           >
             Transfer
           </Button>
