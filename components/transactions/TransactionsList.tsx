@@ -169,7 +169,7 @@ export function TransactionsList() {
             Transactions
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage and track your transactions?
+            Manage and track your transactions
           </p>
         </div>
 

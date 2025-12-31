@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,23 @@ interface TransferOTPProps {
 export function TransferOTP({ onBack, onComplete }: TransferOTPProps) {
   const [otp, setOtp] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,8 +55,11 @@ export function TransferOTP({ onBack, onComplete }: TransferOTPProps) {
         <h2 className="text-xl font-semibold mb-2">Enter OTP</h2>
         <p className="text-muted-foreground text-sm">
           Use the NIBSS Authenticator app to generate a one-time OTP to complete
-          your transaction.
+          your transaction.  <span className="text-sm font-medium mt-2 text-[#386b0b]">
+            Expires in {formatTime(timeLeft)}
+          </span>
         </p>
+
       </div>
 
       <form
@@ -62,7 +82,7 @@ export function TransferOTP({ onBack, onComplete }: TransferOTPProps) {
 
         <Button
           type="submit"
-          disabled={otp.length !== 6 || isProcessing}
+          disabled={otp.length !== 6 || isProcessing || timeLeft === 0}
           className="w-full h-12 text-base font-semibold bg-[#386b0b] hover:bg-[#386b0b]/90 disabled:opacity-50 cursor-pointer"
         >
           {isProcessing ? (

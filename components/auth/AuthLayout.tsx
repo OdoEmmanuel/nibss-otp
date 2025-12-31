@@ -26,7 +26,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/altlogo.png"
-              alt="NIBBS Logo"
+              alt="United Bank of Nigeria Logo"
               width={100}
               height={100}
             />
@@ -62,7 +62,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col min-h-screen">
         <div className="lg:hidden p-6">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/altlogo.png" alt="NIBBS Logo" width={60} height={60} />
+            <Image src="/altlogo.png" alt="United Bank of Nigeria Logo" width={60} height={60} />
           </Link>
         </div>
         <div className="flex-1 flex items-center justify-center px-6 lg:px-16 pb-12">

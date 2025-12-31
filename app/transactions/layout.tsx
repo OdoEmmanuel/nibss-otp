@@ -2,7 +2,7 @@ import { TransactionsLayout } from "@/components/transactions/TransactionsLayout
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Transactions | Nibbs NG",
+  title: "Transactions",
   description: "View your transactions",
 };
 

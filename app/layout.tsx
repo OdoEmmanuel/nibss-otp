@@ -9,10 +9,10 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nibbs NG",
-    template: "%s | Nibbs NG",
+    default: "United Bank of Nigeria",
+    template: "%s | United Bank of Nigeria",
   },
-  description: "Nibbs NG",
+  description: "United Bank of Nigeria",
 };
 
 export default function RootLayout({
