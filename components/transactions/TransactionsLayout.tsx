@@ -24,7 +24,7 @@ export function TransactionsLayout({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
-              <Image src="/logo-nibbs.png" alt="logo" width={60} height={60} />
+              <Image src="/altlogo.png" alt="logo" width={60} height={60} />
             </div>
             <Button
               variant="outline"

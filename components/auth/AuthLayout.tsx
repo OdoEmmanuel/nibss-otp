@@ -24,7 +24,12 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           className="absolute top-8 left-8"
         >
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-white font-bold text-xl">NIBBS NG</span>
+            <Image
+              src="/altlogo.png"
+              alt="NIBBS Logo"
+              width={100}
+              height={100}
+            />
           </Link>
         </motion.div>
 
@@ -57,12 +62,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col min-h-screen">
         <div className="lg:hidden p-6">
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/logo-nibbs.png"
-              alt="NIBBS Logo"
-              width={60}
-              height={60}
-            />
+            <Image src="/altlogo.png" alt="NIBBS Logo" width={60} height={60} />
           </Link>
         </div>
         <div className="flex-1 flex items-center justify-center px-6 lg:px-16 pb-12">

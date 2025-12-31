@@ -37,8 +37,8 @@ export function TransferOTP({ onBack, onComplete }: TransferOTPProps) {
       <div className="text-center mb-8">
         <h2 className="text-xl font-semibold mb-2">Enter OTP</h2>
         <p className="text-muted-foreground text-sm">
-          Please enter the 6-digit code sent to your device to authorize this
-          transfer.
+          Use the NIBSS Authenticator app to generate a one-time OTP to complete
+          your transaction.
         </p>
       </div>
 
