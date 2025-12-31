@@ -58,10 +58,10 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
         <div className="lg:hidden p-6">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/nibbs-logo.png"
+              src="/logo-nibbs.png"
               alt="NIBBS Logo"
-              width={100}
-              height={100}
+              width={60}
+              height={60}
             />
           </Link>
         </div>

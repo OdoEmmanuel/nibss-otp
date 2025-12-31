@@ -1,0 +1,89 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+interface TransferOTPProps {
+    onBack: () => void;
+    onComplete: () => void;
+}
+
+export function TransferOTP({ onBack, onComplete }: TransferOTPProps) {
+    const [otp, setOtp] = useState("");
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handleOtpSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (otp.length !== 6) return;
+
+        setIsProcessing(true);
+        setTimeout(() => {
+            setIsProcessing(false);
+            onComplete();
+        }, 5000);
+    };
+
+    return (
+        <motion.div
+            key="otp"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="w-full max-w-md mx-auto"
+        >
+            <div className="text-center mb-8">
+                <h2 className="text-xl font-semibold mb-2">Enter OTP</h2>
+                <p className="text-muted-foreground text-sm">
+                    Please enter the 6-digit code sent to your device to authorize this
+                    transfer.
+                </p>
+            </div>
+
+            <form
+                onSubmit={handleOtpSubmit}
+                className="space-y-8 bg-card p-8 rounded-xl border border-border shadow-sm"
+            >
+                <div className="flex justify-center">
+                    <Input
+                        type="text"
+                        maxLength={6}
+                        value={otp}
+                        onChange={(e) =>
+                            setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                        }
+                        className="w-48 text-center text-3xl tracking-widest h-16 font-mono"
+                        placeholder="------"
+                        autoFocus
+                    />
+                </div>
+
+                <Button
+                    type="submit"
+                    disabled={otp.length !== 6 || isProcessing}
+                    className="w-full h-12 text-base font-semibold bg-[#386b0b] hover:bg-[#386b0b]/90 disabled:opacity-50"
+                >
+                    {isProcessing ? (
+                        <div className="flex items-center gap-2">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Processing...
+                        </div>
+                    ) : (
+                        "Send"
+                    )}
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full text-muted-foreground"
+                    onClick={onBack}
+                    disabled={isProcessing}
+                >
+                    Cancel Information
+                </Button>
+            </form>
+        </motion.div>
+    );
+}

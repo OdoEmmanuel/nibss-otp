@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Wallet,
   TrendingUp,
@@ -39,6 +40,7 @@ function transformTransactionLog(
 }
 
 export function TransactionsList() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -167,20 +169,20 @@ export function TransactionsList() {
             Transactions
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage and track your transactions
+            Manage and track your transactions?
           </p>
         </div>
 
-        {/* <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Button
+            onClick={() => router.push("/transfer")}
             variant="default"
             size="sm"
-            className="gap-2 bg-[#386b0b] hover:bg-[#386b0b]/80 text-white py-5 w-40 cursor-pointer"
+            className="gap-2 bg-[#386b0b] hover:bg-[#386b0b]/80 text-white py-5 w-40"
           >
-            <Download className="size-4" />
-            Export
+            Transfer
           </Button>
-        </div> */}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

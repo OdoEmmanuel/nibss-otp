@@ -1,0 +1,32 @@
+export const BANKS = [
+  "ACCESS BANK",
+  "FIRST BANK",
+  "OPAY",
+  "ZENITH BANK",
+  "MONIEPOINT",
+  "STERLING BANK",
+  "GTB",
+  "FCMB",
+  "DIAMOND BANK",
+  "FIDELITY BANK",
+  "ECOBANK",
+];
+
+export const RANDOM_NAMES = [
+  "Adewale Okafor",
+  "Chidinma Okowe",
+  "Musa Ibrahim",
+  "Fatima Yusuf",
+  "Emeka Nnamdi",
+  "Ngozi Adeleke",
+  "Ahmed Hassan",
+  "Amina Mohammed",
+  "Bola Adesina",
+  "Suleiman Karim",
+  "Zainab Lawal",
+  "Tunde Ajayi",
+  "Hauwa Mohammed",
+  "Kehinde Okonkwo",
+  "Aisha Bello",
+  "Yusuf Adamu",
+];
